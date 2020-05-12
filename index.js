@@ -240,3 +240,64 @@ class Vector2 {
         }
     }
 }
+
+class LinkedList {
+    constructor() {
+        if (arguments.length == 0) {
+            this.value = null;
+            this.next = null;
+        }
+        let a = this;
+        a.first = this;
+        for (let index in arguments) {
+            a.value = arguments[index];
+            a.next = new LinkedList();
+            a.first = this;
+            let p = a;
+            a = a.next;
+            a.prev = p;
+        }
+    }
+    get length() {
+        let a = this;
+        let i = 0;
+        while(a != null) {
+            i++;
+            a = a.next;
+        }
+        return i - 1;
+    }
+    GetByIndex(i) {
+        let a = this;
+        for(let j = 0; j < i; j++) {
+            a = a.next;
+        }
+        return a;
+    }
+    Remove(i) {
+        let target = this.GetByIndex(i);
+        target.prev.next = target.next;
+    }
+    Insert(i, value) {
+        let target = this.GetByIndex(i);
+        let ins =  new LinkedList();
+        ins.value = value;
+        ins.next = target;
+        target.prev.next = ins;
+    }
+    Append(value) {
+        let ins = new LinkedList();
+        ins.value = value;
+        ins.first = this;
+        ins.next = new LinkedList();
+        this.GetByIndex(this.length - 1).next = ins;
+    }
+    Preppend() {
+        let ins = new LinkedList();
+        ins.value = this.value;
+        ins.next = this.next;
+        this.value = value;
+        this.next = ins;
+        ins.first = this;
+    }
+}
