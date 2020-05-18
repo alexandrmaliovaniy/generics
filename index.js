@@ -278,6 +278,21 @@ class LinkedList {
         let target = this.GetByIndex(i);
         target.prev.next = target.next;
     }
+    Delete() {
+        if (this.prev && this.next) {
+            this.prev.next = this.next;
+            return;
+        } else if (this.prev) {
+            this.prev.next = new LinkedList();
+            return;
+        } else if (this.next) {
+            this.value = this.next.value;
+            this.next = this.next.next;
+        } else {
+            this.value = null;
+        }
+        
+    }
     Insert(i, value) {
         let target = this.GetByIndex(i);
         let ins =  new LinkedList();
@@ -292,12 +307,22 @@ class LinkedList {
         ins.next = new LinkedList();
         this.GetByIndex(this.length - 1).next = ins;
     }
-    Preppend() {
+    Preppend(value) {
         let ins = new LinkedList();
         ins.value = this.value;
         ins.next = this.next;
         this.value = value;
         this.next = ins;
         ins.first = this;
+    }
+    ForEach(cb) {
+        for(let i = 0; i < this.length; i++) {
+            cb(this.GetByIndex(i));
+        }
+    }
+    ForEachValue(cb) {
+        for(let i = 0; i < this.length; i++) {
+            cb(this.GetByIndex(i).value);
+        }
     }
 }
