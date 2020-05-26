@@ -326,3 +326,90 @@ class LinkedList {
         }
     }
 }
+
+class BinaryTree {
+    constructor(data = []) {
+        if (data.length < 1) {
+            this.value = undefined;
+            return;
+        }
+        let i = Math.floor((data.length - 1) / 2);
+        this.value = data[i];
+        this.parent = undefined;
+        this.leftBranch = new BinaryTree(data.slice(0, i));
+        this.leftBranch.parent = this;
+        this.rightBranch = new BinaryTree(data.slice(i + 1, data.length));
+        this.rightBranch.parent = this;
+    }
+    get EmptyBranch() {
+        return new BinaryTree([]);
+    }
+    Append(value) {
+        if (value > this.value) {
+            if (this.rightBranch.value !== undefined) {
+                this.rightBranch.Append(value);
+            } else {
+                this.rightBranch = new BinaryTree([value]);                
+                this.rightBranch.parent = this;
+            }
+            
+        } else if (value < this.value) {
+            if (this.leftBranch.value !== undefined) {
+                this.leftBranch.Append(value);
+            } else {
+                this.leftBranch = new BinaryTree([value]);
+                this.leftBranch.parent = this;
+            }
+        }
+    }
+    AppendBranch(value = new BinaryTree()) {
+
+    }
+    Search(val) {
+        if (val == this.value) {
+            return this;
+        } else if (val > this.value) {
+            return this.rightBranch.Search(val);
+        } else if (val < this.value) {
+            return this.leftBranch.Search(val);
+        }
+        return false;
+    }
+    Min() {
+        let link = this;
+        while(!isNaN(link.value)) {
+            link = link.leftBranch;
+        }
+        return link.parent;
+    }
+    Delete(val) {
+        let node = this.Search(val);
+        if (node.rightBranch.value === undefined) {
+            if (node.leftBranch.value !== undefined) {
+                node.value = node.leftBranch.value;
+                let save = node.leftBranch.rightBranch;
+                if (node.leftBranch.leftBranch.value !== undefined) {
+                    node.leftBranch = node.leftBranch.leftBranch;
+                }
+                if (node.leftBranch.rightBranch.value !== undefined) {
+                    node.rightBranch = save;
+                }
+            } else {
+                node.value = undefined;
+            }
+            return;
+        }
+        let toReplace = node.rightBranch.Min(); 
+        node.value = toReplace.value;
+            toReplace.value = toReplace.rightBranch.value;
+            if (toReplace.rightBranch.value != undefined) {
+                toReplace.rightBranch = toReplace.rightBranch.rightBranch;
+            }
+    }
+    toString() {
+        let left = this.leftBranch.value !== undefined ? this.leftBranch.toString() : "";
+        let right = this.rightBranch.value !== undefined ? this.rightBranch.toString() : "";        
+        let res = `${this.value} [L ${left}, R ${right}]`;
+        return res;
+    }
+}
