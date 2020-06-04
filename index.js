@@ -377,8 +377,15 @@ class BinaryTree {
     }
     Min() {
         let link = this;
-        while(!isNaN(link.value)) {
+        while(link.value !== undefined) {
             link = link.leftBranch;
+        }
+        return link.parent;
+    }
+    Max() {
+        let link = this;
+        while(link.value !== undefined) {
+            link = link.rightBranch;
         }
         return link.parent;
     }
@@ -406,10 +413,31 @@ class BinaryTree {
                 toReplace.rightBranch = toReplace.rightBranch.rightBranch;
             }
     }
-    toString() {
-        let left = this.leftBranch.value !== undefined ? this.leftBranch.toString() : "";
-        let right = this.rightBranch.value !== undefined ? this.rightBranch.toString() : "";        
-        let res = `${this.value} [L ${left}, R ${right}]`;
-        return res;
+    EmptyArr(length) {
+        let arr = [];
+        for (let i = 0; i < length; i++) {
+            arr[i] = ' ';
+        } 
+        return arr;
+    }
+    MakeArray(arr, step = 4, deep = 0, empty) {
+        arr[deep] = arr[deep] || empty;
+        let copyArray = JSON.parse(JSON.stringify(empty));
+        arr[deep][step] = this.value || " ";
+        if (this.leftBranch.value !== undefined) {
+            this.leftBranch.MakeArray(arr, step - 2 + deep, deep+1, copyArray);
+        }
+        if (this.rightBranch.value !== undefined) {
+            this.rightBranch.MakeArray(arr, step + 2 - deep, deep+1, copyArray);
+        }
+    }
+    toString(step) {
+        let res = [];
+        let empty = this.EmptyArr(step * 2 + 1);
+        this.MakeArray(res, step, 0, empty);
+        for (let i = 0; i < res.length; i++) {
+            console.log(res[i]);
+            console.log('\n');
+        }
     }
 }
